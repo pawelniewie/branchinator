@@ -1,0 +1,19 @@
+PATH
+  remote: .
+  specs:
+    branchinator (0.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (11.2.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  branchinator!
+  rake
+
+BUNDLED WITH
+   1.12.5
