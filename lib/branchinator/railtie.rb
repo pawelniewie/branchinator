@@ -1,7 +1,7 @@
 module Branchinator
   class Railtie < Rails::Railtie
     rake_tasks do
-      require 'tasks/install'
+      require 'tasks/db'
     end
   end
 end

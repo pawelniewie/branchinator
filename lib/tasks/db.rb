@@ -28,7 +28,6 @@ class BranchedDatabase
   end
 end
 
-
 namespace :db do
   desc 'Create branch specific database and load db/schema.rb'
   task :branch => :environment do
