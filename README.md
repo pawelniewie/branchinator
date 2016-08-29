@@ -41,3 +41,7 @@ test:
   database: <%= Branchinator.database %>
 ```
 
+Update your `.gitingore` as well:
+
+```echo .branchinator >> .gitignore```
+
