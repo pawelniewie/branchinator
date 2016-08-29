@@ -1,6 +1,8 @@
 Branchinator
 ============
 
+[![Gem Version](https://badge.fury.io/rb/branchinator.svg)](https://badge.fury.io/rb/branchinator)
+
 Database per branch so you can easily switch between database models.
 
 # How to use

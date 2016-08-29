@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
 
   s.author = 'Pawel Niewiadomski'
   s.email = '11110000b@gmail.com'
-  s.homepage = 'https://pawelniewiadomski.com'
+  s.homepage = 'https://github.com/pawelniewie/branchinator'
 
   s.required_ruby_version = '>= 2'
 
