@@ -1,49 +1,39 @@
-class BranchedDatabase
-  def self.name(*args)
-    new(*args).database_name
-  end
+require 'branchinator/branched_database'
+require 'branchinator/constants'
 
-  def initialize(prefix: application_name, separator: '_', env: Rails.env)
-    @prefix = prefix
-    @separator = separator
-    @env = env
-  end
+def create_database(env)
+  config = ActiveRecord::Base.configurations.values_at(env.to_s).first
+  config['database'] = Branchinator::BranchedDatabase.name(env: env)
 
-  def current_branch
-    `git branch | grep "*"`.chomp.split.last.parameterize
-  end
+  ActiveRecord::Tasks::DatabaseTasks.create(config)
+  ActiveRecord::Base.establish_connection(env)
 
-  def database_name
-    [@prefix, current_branch, @env].join(@separator)
+  if env == :test
+    ActiveRecord::Schema.verbose = false
   end
+  ActiveRecord::Tasks::DatabaseTasks.load_schema(config)
+  ActiveRecord::Tasks::DatabaseTasks.load_seed
 
-  def application_name
-    Rails.application.class.name.split('::').first.downcase
-  end
+  config['database']
 end
 
 namespace :db do
   desc 'Create branch specific database and load db/schema.rb'
   task :branch => :environment do
-    [:development, :test].each do |env|
-      config = ActiveRecord::Base.configurations.values_at(env.to_s).first
-      config['database'] = BranchedDatabase.name(env: env)
-
-      ActiveRecord::Tasks::DatabaseTasks.create(config)
-      ActiveRecord::Base.establish_connection(env)
-
-      if env == :test
-        ActiveRecord::Schema.verbose = false
-      end
-      ActiveRecord::Tasks::DatabaseTasks.load_schema
+    env_with_database = [:development, :test].map do |env|
+      [env, create_database(env)]
     end
+
+    File.write(Rails.root.join(Branchinator::FLAG_FILE), Hash[env_with_database].to_json)
   end
 
   desc 'Remove the branch specific database'
   task :unbranch => 'branch:remove'
 
   namespace :branch do
-    task :remove => :drop
+    task :remove => :drop do
+      File.delete(Rails.root.join(Branchinator::FLAG_FILE))
+    end
 
     desc 'Remove then Create the branch specific database'
     task :reset => [:remove, :branch]
