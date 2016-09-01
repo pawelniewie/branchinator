@@ -5,6 +5,8 @@ Branchinator
 
 Database per branch so you can easily switch between database models.
 
+Works with Rails 4.x and 5.x
+
 # How to use
 
 `bin/rails db:branch`
@@ -45,3 +47,18 @@ Update your `.gitingore` as well:
 
 ```echo .branchinator >> .gitignore```
 
+# Additional configuration
+
+By default database name is taken from application name and looks something like:
+
+`awesomeproject_branch_environment`
+
+If you want you can change the first part and the separator.
+
+In your `database.yml` put:
+
+```yaml
+branchinator:
+  prefix: awesome-project
+  separator: _
+```

@@ -18,5 +18,7 @@ Gem::Specification.new do |s|
   s.files = Dir['README.md', 'MIT-LICENSE', 'lib/**/*']
   s.require_path = 'lib'
 
+  s.add_dependency('activerecord', '>= 4.2.0')
+
   s.add_development_dependency('rake')
 end

@@ -2,8 +2,11 @@ require 'branchinator/branched_database'
 require 'branchinator/constants'
 
 def create_database(env)
+  branchinator = ActiveRecord::Base.configurations.values_at('branchinator').first || {}
+  branchinator.deep_symbolize_keys!
+
   config = ActiveRecord::Base.configurations.values_at(env.to_s).first
-  config['database'] = Branchinator::BranchedDatabase.name(env: env)
+  config['database'] = Branchinator::BranchedDatabase.name(branchinator.merge(env: env))
 
   ActiveRecord::Tasks::DatabaseTasks.create(config)
   ActiveRecord::Base.establish_connection(env)
@@ -11,7 +14,13 @@ def create_database(env)
   if env == :test
     ActiveRecord::Schema.verbose = false
   end
-  ActiveRecord::Tasks::DatabaseTasks.load_schema(config)
+
+  if Rails.version.start_with? '4'
+    ActiveRecord::Tasks::DatabaseTasks.load_schema_for(config)
+  else
+    ActiveRecord::Tasks::DatabaseTasks.load_schema(config)
+  end
+
   ActiveRecord::Tasks::DatabaseTasks.load_seed
 
   config['database']
