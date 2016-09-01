@@ -11,7 +11,7 @@ module Branchinator
     end
 
     def current_branch
-      `git branch | grep "*"`.chomp.split.last.parameterize
+      `git branch | grep "*"`.chomp.split.last.gsub(/.*\//, '').parameterize
     end
 
     def branch_database
