@@ -9,15 +9,15 @@ Works with Rails 4.x and 5.x
 
 # How to use
 
-`bin/rails db:branch`
+`bundle exec rake db:branch`
 
 Will create a new database and load it with seed. It will create `.branchinator` with db name for each env.
 
-`bin/rails db:unbranch`
+`bundle exec rake db:unbranch`
 
 Will remove the database and `.branchinator` 
 
-`bin/rails db:branch:reset`
+`bundle exec rake db:branch:reset`
 
 Shortcut for branch remove + create.
 
